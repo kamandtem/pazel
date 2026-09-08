@@ -6,5 +6,4 @@ linter:
   rules:
     avoid_print: true
     curly_braces_in_flow_control_structures: false
-    unnecessary_import: false
     use_build_context_synchronously: false

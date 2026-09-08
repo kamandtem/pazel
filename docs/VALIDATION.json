@@ -1,11 +1,11 @@
 {
   "dart_files": 47,
-  "dart_lines": 2995,
+  "dart_lines": 2992,
   "structural_issues": [],
   "flutter_analyze": "NOT RUN: SDK unavailable",
   "flutter_test": "NOT RUN: SDK unavailable",
   "apk_build": "NOT RUN: Android SDK/Flutter unavailable",
   "web_build": "NOT RUN: Flutter unavailable",
   "disclaimer": "Structural checks do not prove valid Dart types, plugin compatibility, runtime behavior or successful compilation.",
-  "github_error_fix": "Removed invalid const SegmentedButton expression and disabled non-fatal lint rules reported by CI."
+  "github_error_fix_2": "Removed unsupported unnecessary_import lint rule and three redundant sembast imports."
 }
