@@ -1,11 +1,11 @@
 {
   "dart_files": 47,
-  "dart_lines": 2992,
+  "dart_lines": 2993,
   "structural_issues": [],
   "flutter_analyze": "NOT RUN: SDK unavailable",
   "flutter_test": "NOT RUN: SDK unavailable",
   "apk_build": "NOT RUN: Android SDK/Flutter unavailable",
   "web_build": "NOT RUN: Flutter unavailable",
   "disclaimer": "Structural checks do not prove valid Dart types, plugin compatibility, runtime behavior or successful compilation.",
-  "github_error_fix_2": "Removed unsupported unnecessary_import lint rule and three redundant sembast imports."
+  "github_test_fix": "Replaced two unbounded pumpAndSettle calls in the widget smoke test with bounded pumps; the app controller has a periodic ticker, so the test must not wait for global settling."
 }

@@ -14,10 +14,11 @@ void main() {
     final repo = LocalStudyRepository(db); await repo.initialize();
     await tester.pumpWidget(ProviderScope(overrides: [repositoryProvider.overrideWithValue(repo),
       initialDataProvider.overrideWithValue(await repo.load())], child: const PazelApp()));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 250));
     expect(find.text(S.welcomeTitle), findsOneWidget);
     expect(Directionality.of(tester.element(find.text(S.welcomeTitle))), TextDirection.rtl);
-    await tester.tap(find.text(S.skip)); await tester.pumpAndSettle();
+    await tester.tap(find.text(S.skip));
+    await tester.pump(const Duration(milliseconds: 350));
     expect(find.text(S.mockAuth), findsOneWidget);
     expect(find.text(S.sendCode), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink()); await repo.close();
