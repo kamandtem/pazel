@@ -51,7 +51,7 @@ class _Pack extends StatelessWidget {
 class LeaderboardPage extends StatelessWidget {
   const LeaderboardPage({super.key});
   @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text(S.leaderboard)), body: PageBody(children: [
-    const SegmentedButton<String>(segments: [ButtonSegment(value: 'users', label: Text(S.topUsers)), ButtonSegment(value: 'rooms', label: Text(S.topRooms))], selected: {'users'}),
+    SegmentedButton<String>(segments: [ButtonSegment(value: 'users', label: Text(S.topUsers)), ButtonSegment(value: 'rooms', label: Text(S.topRooms))], selected: {'users'}),
     const SizedBox(height: 16), Wrap(spacing: 8, children: [ChoiceChip(label: Text(S.todayLabel), selected: false, onSelected: null), ChoiceChip(label: Text(S.thisWeek), selected: true, onSelected: null), ChoiceChip(label: Text(S.lastWeek), selected: false, onSelected: null), ChoiceChip(label: Text(S.thisMonth), selected: false, onSelected: null)]),
     const SizedBox(height: 18), Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: const Color(0xFF2D3042), borderRadius: BorderRadius.circular(28)), child: const Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [ _Podium(rank: '۳', name: 'علی'), _Podium(rank: '۱', name: 'مینا'), _Podium(rank: '۲', name: 'سارا') ])),
     const SizedBox(height: 18), for (final entry in const [ ['Kiana_2010', '۲۶:۱۲:۰۹'], ['Arash_O', '۲۵:۳۰:۱۵'], ['Hediyeh_Slj', '۲۵:۰۵:۱۴'] ]) Panel(padding: 14, child: Row(children: [const CircleAvatar(child: Icon(Icons.person)), const SizedBox(width: 12), Expanded(child: Text('@${entry[0]}')), Chip(label: Text(entry[1]))])),
