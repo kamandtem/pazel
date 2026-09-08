@@ -13,7 +13,8 @@ SDKs are unavailable in authoring sandbox. Do not turn unrun tests into pass cla
 
 ## Source tests
 8 files: tracker/Pomodoro, XP/streak/ranking, Leitner/repetition, 7/30/90 reports,
-planning/calculators/formatting, mock auth, transactional repository, RTL widget smoke uses bounded pumps; it must not use unbounded pumpAndSettle while the app controller owns a periodic ticker.
+planning/calculators/formatting, mock auth, transactional repository and deterministic RTL onboarding render smoke.
+The widget smoke uses bounded pumps; it must not use unbounded pumpAndSettle while the app controller owns a periodic ticker.
 Use `flutter test --coverage`; never treat number of tests as coverage percentage.
 
 ## Manual acceptance sequence after successful build

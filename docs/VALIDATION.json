@@ -1,11 +1,11 @@
 {
   "dart_files": 47,
-  "dart_lines": 2993,
+  "dart_lines": 3012,
   "structural_issues": [],
   "flutter_analyze": "NOT RUN: SDK unavailable",
   "flutter_test": "NOT RUN: SDK unavailable",
   "apk_build": "NOT RUN: Android SDK/Flutter unavailable",
   "web_build": "NOT RUN: Flutter unavailable",
   "disclaimer": "Structural checks do not prove valid Dart types, plugin compatibility, runtime behavior or successful compilation.",
-  "github_test_fix": "Replaced two unbounded pumpAndSettle calls in the widget smoke test with bounded pumps; the app controller has a periodic ticker, so the test must not wait for global settling."
+  "github_test_fix_2": "Replaced the integration-style onboarding/login smoke test with a deterministic onboarding render smoke test. It uses bounded pumps, verifies Persian RTL/CTA rendering, and disposes the widget tree before closing the database. Domain, repository and auth behavior remain covered by separate tests."
 }

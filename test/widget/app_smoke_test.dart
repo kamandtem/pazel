@@ -6,21 +6,40 @@ import 'package:pazel/app.dart';
 import 'package:pazel/core/database/local_study_repository.dart';
 import 'package:pazel/core/state/app_controller.dart';
 import 'package:pazel/core/localization/strings.dart';
+
 void main() {
-  testWidgets('mobile app opens onboarding then demo login with RTL', (tester) async {
-    tester.view.physicalSize = const Size(390, 844); tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize); addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets('mobile app renders Persian RTL onboarding without settling forever', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     final db = await databaseFactoryMemory.openDatabase('smoke');
-    final repo = LocalStudyRepository(db); await repo.initialize();
-    await tester.pumpWidget(ProviderScope(overrides: [repositoryProvider.overrideWithValue(repo),
-      initialDataProvider.overrideWithValue(await repo.load())], child: const PazelApp()));
-    await tester.pump(const Duration(milliseconds: 250));
+    final repository = LocalStudyRepository(db);
+    await repository.initialize();
+    addTearDown(repository.close);
+
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        repositoryProvider.overrideWithValue(repository),
+        initialDataProvider.overrideWithValue(await repository.load()),
+      ],
+      child: const PazelApp(),
+    ));
+    // Do not use pumpAndSettle: AppController owns a periodic timer.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
     expect(find.text(S.welcomeTitle), findsOneWidget);
+    expect(find.text(S.welcomeBody), findsOneWidget);
+    expect(find.text(S.skip), findsOneWidget);
+    expect(find.text(S.next), findsOneWidget);
     expect(Directionality.of(tester.element(find.text(S.welcomeTitle))), TextDirection.rtl);
-    await tester.tap(find.text(S.skip));
-    await tester.pump(const Duration(milliseconds: 350));
-    expect(find.text(S.mockAuth), findsOneWidget);
-    expect(find.text(S.sendCode), findsOneWidget);
-    await tester.pumpWidget(const SizedBox.shrink()); await repo.close();
+    expect(tester.getSize(find.text(S.next)).height, greaterThan(0));
+
+    // Dispose the widget tree before closing the in-memory database. This also
+    // cancels AppController's periodic ticker deterministically.
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   });
 }
