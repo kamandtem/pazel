@@ -18,6 +18,9 @@ jobs:
       - run: dart format lib test
       - run: flutter analyze --no-fatal-infos
       - run: flutter test --coverage
+      - name: Show full failure detail
+        if: failure()
+        run: flutter test --reporter expanded test/widget/app_smoke_test.dart
       - run: flutter build apk --debug
       - run: flutter build web
       - uses: actions/upload-artifact@v4
