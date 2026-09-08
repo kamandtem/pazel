@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Pazel future API contract",
+    "version": "0.1.0-draft",
+    "description": "Design contract only; no running server provided."
+  },
+  "servers": [
+    {
+      "url": "https://api.example.invalid/v1"
+    }
+  ],
+  "paths": {
+    "/study/sessions": {
+      "post": {
+        "summary": "Append an immutable session idempotently",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudySession"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created or existing session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudySession"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Idempotency key conflict"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "StudySession": {
+        "type": "object",
+        "required": [
+          "id",
+          "subjectId",
+          "startedAt",
+          "endedAt",
+          "seconds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "subjectId": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seconds": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "tests": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "focus": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "quality": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "mood": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "note": {
+            "type": "string"
+          },
+          "planId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "requestId"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+# Copy to key.properties only on a trusted build machine; never commit it.
+storePassword=REPLACE
+keyPassword=REPLACE
+keyAlias=pazel
+storeFile=/absolute/path/to/pazel-upload.jks
