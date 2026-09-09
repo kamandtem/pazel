@@ -27,22 +27,34 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
+    print('[smoke] opening database');
     final db = await databaseFactoryMemory.openDatabase('smoke');
+    print('[smoke] database opened');
     final repository = LocalStudyRepository(db);
+    print('[smoke] calling repository.initialize()');
     await repository.initialize();
+    print('[smoke] repository.initialize() done');
     addTearDown(repository.close);
 
+    print('[smoke] calling repository.load()');
+    final initialData = await repository.load();
+    print('[smoke] repository.load() done');
+
+    print('[smoke] calling pumpWidget');
     await tester.pumpWidget(ProviderScope(
       overrides: [
         repositoryProvider.overrideWithValue(repository),
-        initialDataProvider.overrideWithValue(await repository.load()),
+        initialDataProvider.overrideWithValue(initialData),
         notificationProvider.overrideWithValue(_NoopNotificationService()),
       ],
       child: const PazelApp(),
     ));
+    print('[smoke] pumpWidget done');
     // Do not use pumpAndSettle: AppController owns a periodic timer.
     await tester.pump();
+    print('[smoke] first pump() done');
     await tester.pump(const Duration(milliseconds: 100));
+    print('[smoke] second pump(100ms) done');
 
     expect(find.text(S.welcomeTitle), findsOneWidget);
     expect(find.text(S.welcomeBody), findsOneWidget);
@@ -50,10 +62,13 @@ void main() {
     expect(find.text(S.next), findsOneWidget);
     expect(Directionality.of(tester.element(find.text(S.welcomeTitle))), TextDirection.rtl);
     expect(tester.getSize(find.text(S.next)).height, greaterThan(0));
+    print('[smoke] all expects passed');
 
     // Dispose the widget tree before closing the in-memory database. This also
     // cancels AppController's periodic ticker deterministically.
     await tester.pumpWidget(const SizedBox.shrink());
+    print('[smoke] teardown pumpWidget(shrink) done');
     await tester.pump();
+    print('[smoke] final pump() done — test body complete');
   });
 }
