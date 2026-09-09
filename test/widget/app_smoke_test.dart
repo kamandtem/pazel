@@ -5,10 +5,23 @@ import 'package:sembast/sembast_memory.dart';
 import 'package:pazel/app.dart';
 import 'package:pazel/core/database/local_study_repository.dart';
 import 'package:pazel/core/state/app_controller.dart';
+import 'package:pazel/core/services/notification_service.dart';
 import 'package:pazel/core/localization/strings.dart';
 
+class _NoopNotificationService implements NotificationService {
+  @override
+  Future<bool> requestPermission() async => false;
+  @override
+  Future<void> schedule(int id, String title, String body, DateTime at) async {}
+  @override
+  Future<void> cancel(int id) async {}
+  @override
+  Future<void> cancelAll() async {}
+}
+
 void main() {
-  testWidgets('mobile app renders Persian RTL onboarding without settling forever', (tester) async {
+  testWidgets('mobile app renders Persian RTL onboarding without settling forever',
+      timeout: const Timeout(Duration(seconds: 25)), (tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -23,6 +36,7 @@ void main() {
       overrides: [
         repositoryProvider.overrideWithValue(repository),
         initialDataProvider.overrideWithValue(await repository.load()),
+        notificationProvider.overrideWithValue(_NoopNotificationService()),
       ],
       child: const PazelApp(),
     ));
