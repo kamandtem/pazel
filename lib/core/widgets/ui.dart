@@ -37,6 +37,13 @@ Future<bool> confirmAction(BuildContext context, String title, String body) asyn
 String? requiredText(String? value) => value == null || value.trim().isEmpty ? S.required : null;
 String? integerText(String? value) => int.tryParse(latinDigits(value ?? '')) == null ? S.invalidNumber : null;
 
+/// Scrollable page body.
+///
+/// Uses `SingleChildScrollView` + `Column` instead of a lazy `ListView` on
+/// purpose: page bodies hold a small, fixed number of children, and lazy
+/// building meant widgets below the fold (for example the primary call to
+/// action on the onboarding page) were never built at all. That broke both
+/// widget tests and accessibility tooling on short viewports.
 class PageBody extends StatelessWidget {
   const PageBody({super.key, required this.children, this.padding = 24});
   final List<Widget> children;
@@ -44,7 +51,9 @@ class PageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Align(alignment: Alignment.topCenter,
     child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 1080),
-      child: ListView(padding: EdgeInsets.all(padding), children: children)));
+      child: SingleChildScrollView(padding: EdgeInsets.all(padding),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children))));
 }
 class Panel extends StatelessWidget {
   const Panel({super.key, required this.child, this.color, this.padding = 24});

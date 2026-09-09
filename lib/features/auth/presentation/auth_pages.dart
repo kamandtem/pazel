@@ -17,25 +17,34 @@ class _WelcomeState extends ConsumerState<WelcomePage> {
         context.go('/login');
       }
     }
-    return Scaffold(body: SafeArea(child: PageBody(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        const BrandMark(size: 48), TextButton(onPressed: done, child: const Text(S.skip))]),
-      const SizedBox(height: 48), Text(S.welcomeTitle, style: Theme.of(context).textTheme.headlineLarge),
-      const SizedBox(height: 12), const Text(S.welcomeBody), const SizedBox(height: 40),
-      Panel(color: Theme.of(context).colorScheme.primaryContainer, child: Column(children: [
-        Icon(icons[step], size: 112, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(height: 32), Text(titles[step], style: Theme.of(context).textTheme.titleLarge,
-          textAlign: TextAlign.center), const SizedBox(height: 16),
-        Text(bodies[step], textAlign: TextAlign.center),
-      ])), const SizedBox(height: 32),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [for (var i = 0; i < 3; i++)
-        Container(width: i == step ? 28 : 8, height: 8, margin: const EdgeInsets.all(4),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
-            color: i == step ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant))]),
-      const SizedBox(height: 32), FilledButton(onPressed: ref.watch(busyProvider) ? null :
-        () { if (step < 2) { setState(() => step++); } else { done(); } },
-        child: Text(step == 2 ? S.letsGo : S.next)),
-      const SizedBox(height: 16), const Text(S.demo, textAlign: TextAlign.center),
+    // The primary action lives in a fixed footer instead of inside the
+    // scrollable body: on short viewports (and with fallback test fonts, where
+    // Persian copy wraps taller) it used to be pushed below the fold, so users
+    // could not see it without scrolling and widget tests could not find it.
+    return Scaffold(body: SafeArea(child: Column(children: [
+      Expanded(child: PageBody(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const BrandMark(size: 48), TextButton(onPressed: done, child: const Text(S.skip))]),
+        const SizedBox(height: 48), Text(S.welcomeTitle, style: Theme.of(context).textTheme.headlineLarge),
+        const SizedBox(height: 12), const Text(S.welcomeBody), const SizedBox(height: 40),
+        Panel(color: Theme.of(context).colorScheme.primaryContainer, child: Column(children: [
+          Icon(icons[step], size: 112, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(height: 32), Text(titles[step], style: Theme.of(context).textTheme.titleLarge,
+            textAlign: TextAlign.center), const SizedBox(height: 16),
+          Text(bodies[step], textAlign: TextAlign.center),
+        ])), const SizedBox(height: 32),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [for (var i = 0; i < 3; i++)
+          Container(width: i == step ? 28 : 8, height: 8, margin: const EdgeInsets.all(4),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8),
+              color: i == step ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant))]),
+      ])),
+      Padding(padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          FilledButton(onPressed: ref.watch(busyProvider) ? null :
+            () { if (step < 2) { setState(() => step++); } else { done(); } },
+            child: Text(step == 2 ? S.letsGo : S.next)),
+          const SizedBox(height: 16), const Text(S.demo, textAlign: TextAlign.center),
+        ])),
     ])));
   }
 }
